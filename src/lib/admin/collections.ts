@@ -40,6 +40,8 @@ export const collections: Record<string, Collection> = {
       { name: "published", label: "Published", type: "checkbox", side: true },
       { name: "slug", label: "URL slug", type: "slug", from: "title", side: true, help: "e.g. who-we-are → /who-we-are" },
       { name: "heroImage", label: "Banner image", type: "image", side: true },
+      { name: "portrait", label: "Portrait photo", type: "image", side: true, help: "Optional, shown beside the content (e.g. the founder’s photo)." },
+      { name: "portraitCaption", label: "Portrait caption", type: "text", side: true },
       { name: "showInNav", label: "Show in menu", type: "checkbox", side: true },
       { name: "navLabel", label: "Menu label", type: "text", side: true, help: "Defaults to the title." },
       { name: "navGroup", label: "Menu group", type: "select", options: NAV_GROUP_OPTIONS, side: true },

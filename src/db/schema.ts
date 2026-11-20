@@ -25,6 +25,9 @@ export const pages = pgTable("pages", {
   title: text("title").notNull(),
   subtitle: text("subtitle").notNull().default(""),
   heroImage: text("hero_image").notNull().default(""),
+  /** Optional portrait shown beside the page content (e.g. the founder's photo). */
+  portrait: text("portrait").notNull().default(""),
+  portraitCaption: text("portrait_caption").notNull().default(""),
   body: text("body").notNull().default(""),
   navLabel: text("nav_label").notNull().default(""),
   navGroup: text("nav_group").notNull().default(""),
