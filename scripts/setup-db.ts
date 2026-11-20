@@ -4,21 +4,15 @@
  *
  *   npm run db:setup
  */
+// Must run before anything opens the database.
+import "./check-env";
 import { migrate } from "drizzle-orm/libsql/migrator";
 import { count } from "drizzle-orm";
 import bcrypt from "bcryptjs";
-import fs from "node:fs";
-import { db, databaseUrl, schema } from "../src/db";
+import { db, schema } from "../src/db";
 import { seedContent } from "./seed-content";
 
 async function main() {
-  const url = databaseUrl();
-  if (url.startsWith("file:")) {
-    const file = url.slice("file:".length);
-    const dir = file.split("/").slice(0, -1).join("/");
-    if (dir) fs.mkdirSync(dir, { recursive: true });
-  }
-
   await migrate(db, { migrationsFolder: "./drizzle" });
   console.log("✓ Database migrated");
 
@@ -36,6 +30,12 @@ async function main() {
 async function seedAdmin() {
   const [{ n }] = await db.select({ n: count() }).from(schema.users);
   if (n > 0) return;
+  if (process.env.VERCEL && !process.env.ADMIN_PASSWORD) {
+    console.error(
+      "\n✗ Set ADMIN_EMAIL and ADMIN_PASSWORD in Vercel → Settings → Environment Variables to create the first admin, then redeploy.\n",
+    );
+    process.exit(1);
+  }
   const email = (process.env.ADMIN_EMAIL || "admin@example.com").toLowerCase();
   const password = process.env.ADMIN_PASSWORD || "changeme123";
   await db.insert(schema.users).values({
