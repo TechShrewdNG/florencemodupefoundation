@@ -6,7 +6,6 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [{ source: "/support-us", destination: "/donate", permanent: true }];
   },
-  serverExternalPackages: ["@libsql/client", "libsql"],
   images: {
     remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
   },

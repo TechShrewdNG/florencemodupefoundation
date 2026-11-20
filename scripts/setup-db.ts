@@ -6,10 +6,10 @@
  */
 // Must run before anything opens the database.
 import "./check-env";
-import { migrate } from "drizzle-orm/libsql/migrator";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { count } from "drizzle-orm";
 import bcrypt from "bcryptjs";
-import { db, schema } from "../src/db";
+import { closeDb, db, schema } from "../src/db";
 import { seedContent } from "./seed-content";
 
 async function main() {
@@ -51,10 +51,12 @@ async function seedAdmin() {
   }
 }
 
-main().then(
-  () => process.exit(0),
-  (err) => {
-    console.error(err);
-    process.exit(1);
-  },
-);
+main()
+  .then(() => closeDb())
+  .then(
+    () => process.exit(0),
+    (err) => {
+      console.error(err);
+      process.exit(1);
+    },
+  );

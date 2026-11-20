@@ -31,8 +31,11 @@ cp .env.example .env.local   # then edit values
 npm run dev                  # http://localhost:3000
 ```
 
-`npm run dev` and `npm run build` run `npm run db:setup` first. It creates the SQLite database in `data/`,
-applies migrations, creates the first admin user from `ADMIN_EMAIL`/`ADMIN_PASSWORD` and loads starter content.
+You need a Postgres database. The easiest is a free [Neon](https://neon.tech) project; create a separate
+Neon branch for development so you don't edit the live site's data. Put its connection string in `.env.local`
+as `DATABASE_URL`.
+
+`npm run dev` and `npm run build` run `npm run db:setup` first. It applies migrations, creates the first admin user from `ADMIN_EMAIL`/`ADMIN_PASSWORD` and loads starter content.
 It is safe to run repeatedly: it only seeds content into an empty database.
 
 > If `ADMIN_PASSWORD` isn't set, the first admin is `admin@example.com` / `changeme123`. Change it right away under **Admin → Users**.
@@ -41,7 +44,7 @@ It is safe to run repeatedly: it only seeds content into an empty database.
 
 - **Next.js 16** (App Router, Cache Components). Public pages are prerendered and cached under the `content` tag.
   Every admin save calls `updateTag("content")`, so the site updates immediately.
-- **Drizzle ORM + libSQL**: a local SQLite file in development, [Turso](https://turso.tech) (hosted libSQL) in production.
+- **Drizzle ORM + Postgres** ([Neon](https://neon.tech) recommended), via the standard `pg` driver, so any Postgres works.
 - **Auth**: email and password (bcrypt), with a signed, HTTP-only JWT session cookie. Every admin page and server action checks the session.
 - **TipTap** rich-text editor. Its HTML is sanitized on save.
 - **Uploads**: stored in [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) when `BLOB_READ_WRITE_TOKEN` is set,
@@ -54,29 +57,29 @@ Useful scripts: `npm run lint`, `npm run typecheck`, `npm run db:generate` (afte
 
 ### Vercel (recommended)
 
-Vercel's file system is read-only and temporary, so the site needs a hosted database and hosted image storage.
+Vercel's file system is read-only and temporary, so uploaded images need hosted storage (Vercel Blob).
 The build stops with a list of anything missing.
 
-1. **Database:** create a free database at [turso.tech](https://turso.tech) (or add the Turso integration from the Vercel Marketplace).
-   Copy its URL (`libsql://…`) and an auth token.
+1. **Database:** in Vercel go to **Storage → Create → Neon** (Marketplace) and connect it to this project.
+   This sets `DATABASE_URL` automatically. Alternatively, create a project at [neon.tech](https://neon.tech) and
+   add its connection string as `DATABASE_URL` yourself.
 2. **Image storage:** in Vercel go to **Storage → Create → Blob** and connect it to this project.
    This sets `BLOB_READ_WRITE_TOKEN` automatically.
 3. **Environment variables:** in **Project → Settings → Environment Variables**, add:
    | Name | Value |
    | --- | --- |
-   | `DATABASE_URL` | your Turso URL, `libsql://…` |
-   | `DATABASE_AUTH_TOKEN` | your Turso token |
+   | `DATABASE_URL` | set by the Neon integration, or your Neon connection string |
    | `SESSION_SECRET` | 32+ random characters, e.g. from `openssl rand -base64 48` |
    | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | the first admin login (used only when no users exist yet) |
    | `SITE_URL` | e.g. `https://theflorencemodupefoundation.com` |
-4. **Redeploy.** The build creates the tables and loads the starter content into Turso.
+4. **Redeploy.** The build creates the tables and loads the starter content into Neon.
 
 The site can't stay on GitHub Pages: the admin panel needs a server.
 
 ### Your own server / VPS
 
-Run `npm run build && npm start`, with `SESSION_SECRET` set. Keep `data/` on persistent storage: it holds the
-SQLite database and uploaded images.
+Run `npm run build && npm start` with `DATABASE_URL` and `SESSION_SECRET` set. Without Vercel Blob, keep
+`data/uploads` (or your `UPLOAD_DIR`) on persistent storage: it holds uploaded images.
 
 ## Project layout
 
