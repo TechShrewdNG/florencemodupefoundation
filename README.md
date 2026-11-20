@@ -54,10 +54,22 @@ Useful scripts: `npm run lint`, `npm run typecheck`, `npm run db:generate` (afte
 
 ### Vercel (recommended)
 
-1. Create a Turso database. Set `DATABASE_URL` (`libsql://…`) and `DATABASE_AUTH_TOKEN`.
-2. Create a Vercel Blob store and connect it to the project. This sets `BLOB_READ_WRITE_TOKEN`.
-3. Set `SESSION_SECRET` (at least 32 random characters, e.g. `openssl rand -base64 48`), `ADMIN_EMAIL`, `ADMIN_PASSWORD` and `SITE_URL`.
-4. Import the repo in Vercel and deploy. The build migrates and seeds the database.
+Vercel's file system is read-only and temporary, so the site needs a hosted database and hosted image storage.
+The build stops with a list of anything missing.
+
+1. **Database:** create a free database at [turso.tech](https://turso.tech) (or add the Turso integration from the Vercel Marketplace).
+   Copy its URL (`libsql://…`) and an auth token.
+2. **Image storage:** in Vercel go to **Storage → Create → Blob** and connect it to this project.
+   This sets `BLOB_READ_WRITE_TOKEN` automatically.
+3. **Environment variables:** in **Project → Settings → Environment Variables**, add:
+   | Name | Value |
+   | --- | --- |
+   | `DATABASE_URL` | your Turso URL, `libsql://…` |
+   | `DATABASE_AUTH_TOKEN` | your Turso token |
+   | `SESSION_SECRET` | 32+ random characters, e.g. from `openssl rand -base64 48` |
+   | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | the first admin login (used only when no users exist yet) |
+   | `SITE_URL` | e.g. `https://theflorencemodupefoundation.com` |
+4. **Redeploy.** The build creates the tables and loads the starter content into Turso.
 
 The site can't stay on GitHub Pages: the admin panel needs a server.
 
