@@ -14,6 +14,14 @@ export async function SiteFooter() {
         <div className="lg:col-span-1">
           <p className="font-display text-2xl text-white">{s.siteName}</p>
           <p className="mt-3 leading-relaxed text-brand-200">{s.footerText}</p>
+          {s.ctaButtonLabel && (
+            <Link
+              href={s.ctaButtonHref}
+              className="mt-6 inline-flex rounded-full bg-accent-500 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-600"
+            >
+              {s.ctaButtonLabel}
+            </Link>
+          )}
           <SocialLinks socials={s.socials} className="mt-6 text-white" />
         </div>
         <div>

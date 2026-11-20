@@ -169,6 +169,8 @@ export async function saveSettings(_prev: ActionState, formData: FormData): Prom
     stats: statValues
       .map((value, i) => ({ value: value.trim(), label: (statLabels[i] ?? "").trim() }))
       .filter((s) => s.value && s.label),
+    founderQuote: g("founderQuote"),
+    founderName: g("founderName"),
     ctaHeading: g("ctaHeading"),
     ctaText: g("ctaText"),
     ctaButtonLabel: g("ctaButtonLabel"),

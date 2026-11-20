@@ -75,6 +75,11 @@ export function SettingsForm({ settings: s }: { settings: SiteSettings }) {
         <Area name="mission" label="Mission statement" value={s.mission} />
       </Section>
 
+      <Section title="Home page: Founder’s quote" hint="Shown with the portrait from the From Our Founder page. Leave the quote empty to hide it.">
+        <Area name="founderQuote" label="Quote" value={s.founderQuote} />
+        <Text name="founderName" label="Attribution" value={s.founderName} full />
+      </Section>
+
       <Section title="Call to action banner" hint="The orange banner near the bottom of the home page, and the button in the menu.">
         <Text name="ctaHeading" label="Heading" value={s.ctaHeading} />
         <Text name="ctaButtonLabel" label="Button label" value={s.ctaButtonLabel} />

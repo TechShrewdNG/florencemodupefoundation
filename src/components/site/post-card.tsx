@@ -11,23 +11,37 @@ export function formatDate(d: string) {
 }
 
 export function PostCard({ post }: { post: Post }) {
+  const date = formatDate(post.publishedAt);
   return (
-    <Link href={`/news/${post.slug}`} className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-100 transition hover:-translate-y-1 hover:shadow-xl">
-      <div className="relative aspect-[16/10] bg-brand-100">
+    <Link
+      href={`/news/${post.slug}`}
+      className="group flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-gray-100 transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+    >
+      <div className="relative aspect-[16/10] overflow-hidden bg-brand-100">
         {post.coverImage && (
-          <Img src={post.coverImage} alt="" fill sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw" className="object-cover" />
+          <Img
+            src={post.coverImage}
+            alt=""
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+            className="object-cover transition duration-700 group-hover:scale-105"
+          />
         )}
         {post.category && (
-          <span className="absolute left-4 top-4 rounded-full bg-accent-500 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+          <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-700 backdrop-blur">
             {post.category}
           </span>
         )}
       </div>
       <div className="flex flex-1 flex-col p-6">
-        <p className="text-sm text-muted">{formatDate(post.publishedAt)}</p>
-        <h3 className="mt-2 font-display text-xl font-semibold text-brand-800 group-hover:text-brand-600">{post.title}</h3>
-        {post.excerpt && <p className="mt-3 line-clamp-3 text-muted">{post.excerpt}</p>}
-        <span className="mt-auto pt-4 font-semibold text-accent-600">Read more →</span>
+        {date && <p className="mb-2 text-sm text-muted">{date}</p>}
+        <h3 className="font-display text-xl font-semibold leading-snug text-brand-800 transition group-hover:text-brand-600">
+          {post.title}
+        </h3>
+        {post.excerpt && <p className="mt-3 line-clamp-3 leading-relaxed text-muted">{post.excerpt}</p>}
+        <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-accent-600">
+          Read more <span className="transition group-hover:translate-x-1">→</span>
+        </span>
       </div>
     </Link>
   );
