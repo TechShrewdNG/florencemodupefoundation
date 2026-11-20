@@ -110,6 +110,25 @@ export async function getPosts(limit?: number) {
   return limit ? q.limit(limit) : q;
 }
 
+export async function getPostsByCategory(category: string) {
+  "use cache";
+  tagContent();
+  return db
+    .select()
+    .from(schema.posts)
+    .where(and(eq(schema.posts.published, true), eq(schema.posts.category, category)))
+    .orderBy(desc(schema.posts.publishedAt), desc(schema.posts.id));
+}
+
+export function parsePhotos(photos: string): string[] {
+  try {
+    const v = JSON.parse(photos || "[]");
+    return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
 export async function getPost(slug: string) {
   "use cache";
   tagContent();

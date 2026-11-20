@@ -10,7 +10,7 @@ Go to **`/admin`** and sign in. From there you can manage:
 | Section | What it controls |
 | --- | --- |
 | **Pages** | Page title, banner, rich-text content, and the main menu (label, dropdown group, order, show/hide). You can add new pages too. |
-| **News** | Articles with cover image, category, date, and draft/published state. |
+| **News** | Articles with cover image, photo gallery, optional video, category, date, and draft/published state. Posts whose category matches a page title (e.g. “Outreach”) are listed on that page. |
 | **Home Slides** | The rotating banner on the home page. |
 | **Core Values**, **Team**, **Milestones** | The lists on those pages. |
 | **Gallery** | Upload photos (several at once), add captions, and reorder them. |
@@ -76,5 +76,6 @@ src/lib/admin/         admin collection definitions (fields shown in the editor)
 src/db/schema.ts       database schema
 scripts/setup-db.ts    migrations, first admin and starter content
 drizzle/               SQL migrations
+scripts/seed-content.ts starter content imported from theflorencemodupefoundation.com
 legacy-wordpress/      the previous static WordPress export (reference only)
 ```

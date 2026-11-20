@@ -5,6 +5,7 @@ import { Loader2, Save } from "lucide-react";
 import type { ActionState } from "@/app/admin/actions";
 import type { Field } from "@/lib/admin/fields";
 import { ImageField } from "./image-field";
+import { MultiImageField } from "./multi-image-field";
 import { RichTextEditor } from "./rich-text-editor";
 import { btn, Card, Flash, inputClass } from "./ui";
 
@@ -76,6 +77,9 @@ function FieldInput({ field: f, value, locked }: { field: Field; value: unknown;
       break;
     case "image":
       control = <ImageField name={f.name} defaultValue={str} />;
+      break;
+    case "images":
+      control = <MultiImageField name={f.name} defaultValue={str} />;
       break;
     case "number":
       control = <input id={id} type="number" name={f.name} defaultValue={str || "0"} className={inputClass} />;

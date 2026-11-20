@@ -74,6 +74,16 @@ export async function saveItem(
       case "richtext":
         values[f.name] = cleanHtml(String(raw ?? ""));
         break;
+      case "images": {
+        let list: unknown = [];
+        try {
+          list = JSON.parse(String(raw ?? "[]"));
+        } catch {}
+        values[f.name] = JSON.stringify(
+          Array.isArray(list) ? list.filter((u): u is string => typeof u === "string" && u.length > 0) : [],
+        );
+        break;
+      }
       case "slug": {
         const source = String(formData.get(f.from ?? "title") ?? "");
         values[f.name] = slugify(String(raw ?? "")) || slugify(source);

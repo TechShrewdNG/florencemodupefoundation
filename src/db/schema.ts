@@ -49,6 +49,9 @@ export const posts = sqliteTable("posts", {
   coverImage: text("cover_image").notNull().default(""),
   category: text("category").notNull().default(""),
   body: text("body").notNull().default(""),
+  /** JSON array of image URLs shown as a photo grid under the article. */
+  photos: text("photos").notNull().default("[]"),
+  videoUrl: text("video_url").notNull().default(""),
   published: integer("published", { mode: "boolean" }).notNull().default(false),
   publishedAt: text("published_at").notNull().default(""),
   ...timestamps,

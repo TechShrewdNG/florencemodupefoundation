@@ -4,6 +4,7 @@ export type FieldType =
   | "textarea"
   | "richtext"
   | "image"
+  | "images"
   | "number"
   | "checkbox"
   | "date"

@@ -5,7 +5,9 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { GalleryImage } from "@/db/schema";
 import { Img } from "./img";
 
-export function GalleryGrid({ images }: { images: GalleryImage[] }) {
+type GridImage = Pick<GalleryImage, "id" | "src" | "caption">;
+
+export function GalleryGrid({ images }: { images: GridImage[] }) {
   const [open, setOpen] = useState<number | null>(null);
   const n = images.length;
 

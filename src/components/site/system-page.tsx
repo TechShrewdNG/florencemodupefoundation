@@ -10,7 +10,7 @@ export async function SystemPageHeader({ slug, fallbackTitle }: { slug: string; 
     <>
       <PageHero title={page?.title ?? fallbackTitle} subtitle={page?.subtitle} image={page?.heroImage} />
       {page?.body && (
-        <div className="mx-auto max-w-3xl px-4 pt-16 text-center">
+        <div className="mx-auto max-w-3xl px-4 pt-16">
           <RichText html={page.body} />
         </div>
       )}
