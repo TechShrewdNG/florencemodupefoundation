@@ -61,6 +61,7 @@ export async function seedContent() {
       title: "From Our Founder",
       subtitle: "Dr (Mrs.) Olubukola Abitoye, Founder",
       heroImage: "/images/img_2488.jpg",
+      portraitCaption: "Dr (Mrs.) Olubukola Abitoye, Founder",
       navGroup: "About",
       sortOrder: 3,
       body:

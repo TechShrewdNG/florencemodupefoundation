@@ -61,13 +61,10 @@ export async function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-sm text-brand-200 sm:flex-row">
+        <div className="mx-auto max-w-7xl px-4 py-6 text-center text-sm text-brand-200 sm:text-left">
           <p>
             © <CopyrightYear /> {s.siteName}. All rights reserved.
           </p>
-          <Link href="/admin" className="hover:text-white">
-            Admin
-          </Link>
         </div>
       </div>
     </footer>
