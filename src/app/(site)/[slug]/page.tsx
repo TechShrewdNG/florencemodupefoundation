@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import { getContentPageSlugs, getPage, getPostsByCategory } from "@/lib/data";
 import { PostCard } from "@/components/site/post-card";
 import { Img } from "@/components/site/img";
+import { PageSidebar, getSection } from "@/components/site/page-sidebar";
+import { Reveal } from "@/components/site/reveal";
 import { PageHero, RichText } from "@/components/site/page-hero";
 import { PageSkeleton } from "@/components/site/skeleton";
 
@@ -22,30 +24,40 @@ async function ContentPage({ params }: { params: PageProps<"/[slug]">["params"] 
   const page = await getPage(slug);
   if (!page || page.system) notFound();
   // News posts whose category matches this page's title are listed under it (e.g. "Outreach").
-  const related = await getPostsByCategory(page.title);
+  const [related, section] = await Promise.all([getPostsByCategory(page.title), getSection(`/${slug}`)]);
+  const hasBody = page.body.replace(/<[^>]+>/g, "").trim().length > 0;
   return (
     <>
-      <PageHero title={page.title} subtitle={page.subtitle} image={page.heroImage} />
-      <article className="mx-auto max-w-3xl px-4 py-16 sm:py-20">
-        {page.portrait && (
-          <figure className="mx-auto mb-8 w-56 sm:float-right sm:mb-4 sm:ml-8 sm:w-64">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-lg ring-4 ring-brand-50">
-              <Img src={page.portrait} alt={page.portraitCaption || page.title} fill sizes="256px" className="object-cover" />
-            </div>
-            {page.portraitCaption && (
-              <figcaption className="mt-3 text-center text-sm font-medium text-brand-800">{page.portraitCaption}</figcaption>
+      <PageHero title={page.title} subtitle={page.subtitle} image={page.heroImage} crumb={section?.label} />
+      {(hasBody || page.portrait) && (
+        <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:py-20 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-16">
+          <article className="max-w-3xl">
+            {page.portrait && (
+              <figure className="mx-auto mb-10 w-60 sm:float-right sm:mb-6 sm:ml-10 sm:w-64">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-3xl shadow-xl ring-8 ring-brand-50">
+                  <Img src={page.portrait} alt={page.portraitCaption || page.title} fill sizes="256px" className="object-cover" />
+                </div>
+                {page.portraitCaption && (
+                  <figcaption className="mt-4 text-center text-sm font-semibold text-brand-800">{page.portraitCaption}</figcaption>
+                )}
+              </figure>
             )}
-          </figure>
-        )}
-        <RichText html={page.body} />
-        <div className="clear-both" />
-      </article>
+            <RichText html={page.body} />
+            <div className="clear-both" />
+          </article>
+          <PageSidebar path={`/${slug}`} />
+        </div>
+      )}
       {related.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 pb-20">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {related.map((p) => (
-              <PostCard key={p.id} post={p} />
-            ))}
+        <section className="bg-cream py-16 sm:py-20">
+          <div className="mx-auto max-w-7xl px-4">
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {related.map((p, i) => (
+                <Reveal key={p.id} delay={(i % 3) * 80} className="h-full">
+                  <PostCard post={p} />
+                </Reveal>
+              ))}
+            </div>
           </div>
         </section>
       )}

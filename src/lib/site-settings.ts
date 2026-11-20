@@ -21,6 +21,8 @@ export type SiteSettings = {
   vision: string;
   mission: string;
   stats: Stat[];
+  founderQuote: string;
+  founderName: string;
   ctaHeading: string;
   ctaText: string;
   ctaButtonLabel: string;
@@ -47,6 +49,9 @@ export const defaultSettings: SiteSettings = {
   mission:
     "Equitable access to quality education and life changing skills for Africans aimed at developing future leaders.",
   stats: [],
+  founderQuote:
+    "We will invest in the educational needs of indigent but creative and brilliant children in Nigeria, irrespective of their religion and tribe.",
+  founderName: "Dr (Mrs.) Olubukola Abitoye, Founder",
   ctaHeading: "Join the Helpers Group",
   ctaText:
     "Every child has a right to quality education. Partner with us, volunteer your time or give today to help a child learn and a woman build her future.",
