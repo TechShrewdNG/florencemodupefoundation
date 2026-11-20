@@ -1,17 +1,12 @@
-import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { boolean, integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 const timestamps = {
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
-  updatedAt: integer("updated_at", { mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 };
 
-export const users = sqliteTable("users", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
   email: text("email").notNull().unique(),
   name: text("name").notNull(),
   passwordHash: text("password_hash").notNull(),
@@ -19,13 +14,13 @@ export const users = sqliteTable("users", {
 });
 
 /** Key/value store for site-wide settings. Values are JSON-encoded. */
-export const settings = sqliteTable("settings", {
+export const settings = pgTable("settings", {
   key: text("key").primaryKey(),
   value: text("value").notNull(),
 });
 
-export const pages = sqliteTable("pages", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const pages = pgTable("pages", {
+  id: serial("id").primaryKey(),
   slug: text("slug").notNull().unique(),
   title: text("title").notNull(),
   subtitle: text("subtitle").notNull().default(""),
@@ -34,15 +29,15 @@ export const pages = sqliteTable("pages", {
   navLabel: text("nav_label").notNull().default(""),
   navGroup: text("nav_group").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),
-  showInNav: integer("show_in_nav", { mode: "boolean" }).notNull().default(true),
-  published: integer("published", { mode: "boolean" }).notNull().default(true),
+  showInNav: boolean("show_in_nav").notNull().default(true),
+  published: boolean("published").notNull().default(true),
   /** System pages back a built-in route (e.g. /contact) and can't be deleted or re-slugged. */
-  system: integer("system", { mode: "boolean" }).notNull().default(false),
+  system: boolean("system").notNull().default(false),
   ...timestamps,
 });
 
-export const posts = sqliteTable("posts", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const posts = pgTable("posts", {
+  id: serial("id").primaryKey(),
   slug: text("slug").notNull().unique(),
   title: text("title").notNull(),
   excerpt: text("excerpt").notNull().default(""),
@@ -52,13 +47,13 @@ export const posts = sqliteTable("posts", {
   /** JSON array of image URLs shown as a photo grid under the article. */
   photos: text("photos").notNull().default("[]"),
   videoUrl: text("video_url").notNull().default(""),
-  published: integer("published", { mode: "boolean" }).notNull().default(false),
+  published: boolean("published").notNull().default(false),
   publishedAt: text("published_at").notNull().default(""),
   ...timestamps,
 });
 
-export const heroSlides = sqliteTable("hero_slides", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const heroSlides = pgTable("hero_slides", {
+  id: serial("id").primaryKey(),
   eyebrow: text("eyebrow").notNull().default(""),
   title: text("title").notNull(),
   text: text("text").notNull().default(""),
@@ -69,16 +64,16 @@ export const heroSlides = sqliteTable("hero_slides", {
   ...timestamps,
 });
 
-export const coreValues = sqliteTable("core_values", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const coreValues = pgTable("core_values", {
+  id: serial("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),
   ...timestamps,
 });
 
-export const teamMembers = sqliteTable("team_members", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const teamMembers = pgTable("team_members", {
+  id: serial("id").primaryKey(),
   name: text("name").notNull(),
   role: text("role").notNull().default(""),
   bio: text("bio").notNull().default(""),
@@ -87,8 +82,8 @@ export const teamMembers = sqliteTable("team_members", {
   ...timestamps,
 });
 
-export const milestones = sqliteTable("milestones", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const milestones = pgTable("milestones", {
+  id: serial("id").primaryKey(),
   date: text("date").notNull().default(""),
   title: text("title").notNull(),
   description: text("description").notNull().default(""),
@@ -97,27 +92,27 @@ export const milestones = sqliteTable("milestones", {
   ...timestamps,
 });
 
-export const galleryImages = sqliteTable("gallery_images", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const galleryImages = pgTable("gallery_images", {
+  id: serial("id").primaryKey(),
   src: text("src").notNull(),
   caption: text("caption").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),
   ...timestamps,
 });
 
-export const messages = sqliteTable("messages", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const messages = pgTable("messages", {
+  id: serial("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull(),
   phone: text("phone").notNull().default(""),
   subject: text("subject").notNull().default(""),
   body: text("body").notNull(),
-  read: integer("read", { mode: "boolean" }).notNull().default(false),
+  read: boolean("read").notNull().default(false),
   ...timestamps,
 });
 
-export const subscribers = sqliteTable("subscribers", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const subscribers = pgTable("subscribers", {
+  id: serial("id").primaryKey(),
   email: text("email").notNull().unique(),
   ...timestamps,
 });

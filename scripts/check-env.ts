@@ -1,24 +1,26 @@
-/** On Vercel the file system is read-only and temporary, so a hosted database and storage are required. */
-function checkHostedEnv() {
-  if (!process.env.VERCEL) return;
+/** Fails early with a readable list when required settings are missing. */
+function checkEnv() {
+  const onVercel = Boolean(process.env.VERCEL);
   const missing: string[] = [];
-  if (!process.env.DATABASE_URL || process.env.DATABASE_URL.startsWith("file:")) {
-    missing.push("DATABASE_URL (a Turso database URL, libsql://…) and DATABASE_AUTH_TOKEN");
+  if (!process.env.DATABASE_URL) {
+    missing.push("DATABASE_URL (a Postgres connection string, e.g. from Neon: postgresql://…)");
   }
-  if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) {
+  if (onVercel && (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32)) {
     missing.push("SESSION_SECRET (at least 32 random characters)");
   }
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+  if (onVercel && !process.env.BLOB_READ_WRITE_TOKEN) {
     missing.push("BLOB_READ_WRITE_TOKEN (connect a Vercel Blob store to the project)");
   }
   if (!missing.length) return;
   console.error(
     [
       "",
-      "✗ This deployment is missing required environment variables:",
+      `✗ ${onVercel ? "This deployment" : "Your environment"} is missing required settings:`,
       ...missing.map((m) => `   • ${m}`),
       "",
-      "  Add them in Vercel → Project → Settings → Environment Variables, then redeploy.",
+      onVercel
+        ? "  Add them in Vercel → Project → Settings → Environment Variables, then redeploy."
+        : "  Add them to .env.local (see .env.example).",
       "  See the “Deploying” section of README.md for step-by-step instructions.",
       "",
     ].join("\n"),
@@ -26,4 +28,4 @@ function checkHostedEnv() {
   process.exit(1);
 }
 
-checkHostedEnv();
+checkEnv();

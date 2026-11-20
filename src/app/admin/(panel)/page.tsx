@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { count, desc, eq } from "drizzle-orm";
-import type { SQLiteTable } from "drizzle-orm/sqlite-core";
+import type { PgTable } from "drizzle-orm/pg-core";
 import { db, schema } from "@/db";
 import { requireUser } from "@/lib/auth";
 import { Card, PageHeader } from "@/components/admin/ui";
 
 export default async function Dashboard() {
   const user = await requireUser();
-  const c = async (t: SQLiteTable) => (await db.select({ n: count() }).from(t))[0].n;
+  const c = async (t: PgTable) => (await db.select({ n: count() }).from(t))[0].n;
   const [pages, posts, photos, subs, team, unread, recent] = await Promise.all([
     c(schema.pages),
     c(schema.posts),
